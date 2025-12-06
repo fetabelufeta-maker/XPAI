@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XPAI — Xpert Promotions (Meme Coin)</title>
+  <meta name="description" content="XPAI — Freelancing Agency with a Meme-Coin. Join the $XPAI community." />
+  <style>
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color:#e9f0ff; background:#05020a; overflow-x:hidden}
+
+    /* Neon gradient background */
+    .bg {position:fixed;inset:0;background:linear-gradient(120deg,#070617 0%,#0b0520 40%,#070617 100%);z-index:-3;}
+    .neon-grad{position:fixed;inset:0;background:radial-gradient(ellipse at 20% 10%, rgba(123, 71, 255,0.12), transparent 10%), radial-gradient(ellipse at 80% 80%, rgba(0, 221, 255,0.06), transparent 12%);mix-blend-mode:screen;z-index:-2}
+
+    /* Floating coins container */
+    .coins{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1}
+    .coin{position:absolute;width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#ffdd57,#ff7bab);display:flex;align-items:center;justify-content:center;font-weight:800;color:#080710;box-shadow:0 10px 30px rgba(255,123,171,0.15), inset 0 -6px 16px rgba(0,0,0,0.12);transform:translate3d(0,0,0);}
+    .coin.small{width:40px;height:40px;border-radius:10px}
+    .coin .$XP{font-family:monospace;font-size:20px}
+
+    /* Animations for floating */
+    @keyframes floatUp {0% { transform: translateY(110vh) rotate(0deg) scale(0.8) } 100% { transform: translateY(-30vh) rotate(360deg) scale(1) }}
+    @keyframes sway {0% { transform: translateX(0) } 50% { transform: translateX(20px) } 100% { transform: translateX(0) }}
+
+    /* Header */
+    header{
+      padding:24px 24px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position: relative;
+      gap:0;
+      flex-wrap: wrap;
+    }
+
+    /* Logo and slogan container */
+    .logo-slogan {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: linear-gradient(135deg,#ffdd57,#ff7bab);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #080710;
+      font-family: monospace;
+      font-size: 26px;
+      box-shadow: 0 8px 25px rgba(255,123,171,0.3);
+      user-select: none;
+    }
+    .slogan {
+      font-weight: 600;
+      font-size: 17px;
+      color: #cfe8ffcc;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* Language selector and hamburger container */
+    .menu-container {
+      display: flex;
+      align-items: center;
+      gap: 0; /* no gap between menus */
+    }
+
+    /* Language selector styling */
+    #language-select {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #7b47ff;
+      background: #120e2e;
+      color: #e9f0ff;
+      font-size: 14px;
+      font-family: Inter, sans-serif;
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 0 10px #7b47ff88;
+      transition: background 0.3s ease;
+      margin-right: 0;
+    }
+    #language-select:hover, #language-select:focus {
+      background: #7b47ff;
+      color: #fff;
+      outline: none;
+    }
+
+    /* Hamburger styles */
+    #hamburger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: #120e2e;
+      border: 1px solid #7b47ff;
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-left: 0;
+      box-shadow: 0 0 10px #7b47ff88;
+      z-index: 21;
+      transition: background 0.3s ease;
+    }
+    #hamburger:hover, #hamburger:focus {
+      background: #7b47ff;
+      outline: none;
+    }
+    #hamburger svg {
+      fill: #e9f0ff;
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Dropdown menu */
+    #menu {
+      position: absolute;
+      top: 70px;
+      right: 24px;
+      background: #120e2e;
+      border: 1px solid #7b47ff;
+      border-radius: 8px;
+      box-shadow: 0 0 20px #7b47ffaa;
+      display: none;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 30;
+    }
+    #menu a {
+      padding: 10px 16px;
+      text-decoration: none;
+      color: #e9f0ff;
+      border-bottom: 1px solid #7b47ff22;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+    #menu a:last-child {
+      border-bottom: none;
+    }
+    #menu a:hover, #menu a:focus {
+      background: #7b47ff44;
+      outline: none;
+    }
+
+    /* Main hero */
+    .hero {
+      padding:40px 24px;
+      display:grid;
+      grid-template-columns:1fr 360px;
+      gap:32px;
+      align-items:center
+    }
+    .hero-left {
+      max-width:900px
+    }
+    .kicker {
+      display:inline-block;
+      padding:6px 10px;
+      background:linear-gradient(90deg,rgba(255,255,255,0.06),transparent);
+      border-radius:999px;
+      font-size:12px;
+      color:#cfe8ff;
+      margin-bottom:18px
+    }
+    .hero h2 {
+      font-size:46px;
+      line-height:1.02;
+      margin-bottom:12px;
+      text-shadow:0 8px 40px rgba(123,71,255,0.08)
+    }
+    .hero h2 .neon {
+      background:linear-gradient(90deg,#ff9ad1,#7b47ff,#00ddff);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent
+    }
+    .hero p.lead {
+      font-size:16px;
+      color:rgba(233,240,255,0.85);
+      margin-bottom:18px
+    }
+    .buttons {
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap
+    }
+    .btn {
+      padding:12px 18px;
+      border-radius:12px;
+      font-weight:700;
+      border:0;
+      cursor:pointer
+    }
+    .btn-primary {
+      background:linear-gradient(90deg,#ff6ea0,#7b47ff);
+      box-shadow:0 8px 30px rgba(123,71,255,0.18);
+      color:#071127
+    }
+    .btn-ghost {
+      background:transparent;
+      border:1px solid rgba(233,240,255,0.08);
+      color:#dbeeff
+    }
+
+    /* Card */
+    .card {
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:20px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 10px 40px rgba(4,2,10,0.6)
+    }
+    .contract {
+      word-break:break-all;
+      font-family:monospace;
+      font-size:13px;
+      background:rgba(255,255,255,0.02);
+      padding:10px;
+      border-radius:10px;
+      margin-top:8px
+    }
+    .copy {
+      display:inline-block;
+      margin-left:8px;
+      padding:6px 8px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.03);
+      cursor:pointer;
+      font-weight:700
+    }
+
+    /* Tokenomics & Roadmap */
+    .section {
+      padding:32px 24px;
+      max-width:900px;
+      margin: 0 auto 48px;
+    }
+    .grid2 {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px
+    }
+    .tokenomics li {
+      margin-bottom:10px
+    }
+
+    /* Allocation chart container */
+    .allocation-chart {
+      margin-top: 20px;
+      text-align: center;
+      color: #cfe8ffcc;
+    }
+    .allocation-chart svg {
+      max-width: 280px;
+      height: auto;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 6px #7b47ff88);
+    }
+
+    /* Footer */
+    footer {
+      padding:26px 24px;
+      border-top:1px dashed rgba(255,255,255,0.02);
+      display:flex;
+      justify-content:space-between;
+      align-items:center
+    }
+    .socials a {
+      margin-left:12px;
+      text-decoration:none;
+      color:#dbeeff;
+      font-weight:700;
+      display: inline-flex;
+      align-items: center;
+    }
+    .socials svg {
+      width: 24px;
+      height: 24px;
+      fill: #dbeeff;
+    }
+
+    /* Responsive */
+    @media(max-width:920px){
+      .hero {
+        grid-template-columns:1fr;
+      }
+      .hero-right {
+        order:-1
+      }
+      .grid2 {
+        grid-template-columns:1fr
+      }
+      .logo {
+        width:64px;
+        height:64px
+      }
+      .hero h2 {
+        font-size:34px
+      }
+      header {
+        justify-content: space-between !important;
+        gap: 0 !important;
+        padding-right: 16px;
+      }
+      #language-select {
+        position: static !important;
+        margin: 0 !important;
+        box-shadow: none;
+      }
+      #hamburger {
+        margin-left: 0;
+      }
+      #menu a {
+        font-size: 13px;
+        padding: 8px 12px;
+        min-width: 130px; /* enough for no cutoff on mobile */
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        padding: 16px 24px 16px 24px;
+      }
+      nav {
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      nav a.btn {
+        flex: 1 1 calc(33% - 12px);
+        text-align: center;
+        min-width: 90px;
+      }
+      .brand {
+        width: 100%;
+      }
+      .title h1 {
+        font-size: 18px;
+      }
+      .title p {
+        font-size: 12px;
+      }
+      .logo {
+        width: 56px;
+        height: 56px;
+      }
+      #language-select {
+        position: static;
+        margin: 0;
+        box-shadow: none;
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="neon-grad"></div>
+
+  <!-- Floating coins container -->
+  <div class="coins" aria-hidden="true">
+    <div class="coin" style="left:8%; bottom:-10vh; animation: floatUp 18s linear infinite; animation-delay:-2s"><span class="xp">$XPAI</span></div>
+    <div class="coin small" style="left:20%; bottom:-8vh; animation: floatUp 14s linear infinite; animation-delay:-6s"><span class="xp">$XPAI</span></div>
+    <div class="coin" style="left:34%; bottom:-12vh; animation: floatUp 20s linear infinite; animation-delay:-4s"><span class="xp">$XPAI</span></div>
+    <div class="coin small" style="left:48%; bottom:-9vh; animation: floatUp 16s linear infinite; animation-delay:-8s"><span class="xp">$XPAI</span></div>
+    <div class="coin" style="left:60%; bottom:-11vh; animation: floatUp 22s linear infinite; animation-delay:-10s"><span class="xp">$XPAI</span></div>
+    <div class="coin small" style="left:72%; bottom:-7vh; animation: floatUp 15s linear infinite; animation-delay:-3s"><span class="xp">$XPAI</span></div>
+    <div class="coin" style="left:84%; bottom:-13vh; animation: floatUp 19s linear infinite; animation-delay:-7s"><span class="xp">$XPAI</span></div>
+    <div class="coin" style="left:12%; bottom:-22vh; animation: floatUp 26s linear infinite; animation-delay:-10s; width:92px;height:92px;border-radius:20px"><span class="xp" style="font-size:34px">$XPAI</span></div>
+    <div class="coin small" style="left:54%; bottom:-18vh; animation: floatUp 21s linear infinite; animation-delay:-12s"><span class="xp">$XPAI</span></div>
+    <div class="coin" style="left:92%; bottom:-20vh; animation: floatUp 24s linear infinite; animation-delay:-5s"><span class="xp">$XPAI</span></div>
+  </div>
+
+  <header>
+    <!-- Logo and slogan -->
+    <div class="logo-slogan">
+      <div class="logo" aria-hidden="true">$X</div>
+      <div class="slogan">The next meme coin for freelancers</div>
+    </div>
+
+    <!-- Language selector and hamburger container -->
+    <div class="menu-container">
+      <!-- Language selector -->
+      <select id="language-select" aria-label="Select language">
+        <option value="en" selected>English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="zh">中文</option>
+        <option value="ar">العربية</option>
+        <option value="ru">Русский</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="pt">Português</option>
+        <option value="it">Italiano</option>
+        <option value="tr">Türkçe</option>
+        <option value="nl">Nederlands</option>
+        <option value="sv">Svenska</option>
+        <option value="pl">Polski</option>
+        <option value="id">Bahasa Indonesia</option>
+      </select>
+
+      <!-- Hamburger -->
+      <button id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="menu" type="button">
+        <svg viewBox="0 0 100 80" width="28" height="28" aria-hidden="true" focusable="false">
+          <rect width="100" height="15"></rect>
+          <rect y="30" width="100" height="15"></rect>
+          <rect y="60" width="100" height="15"></rect>
+        </svg>
+      </button>
+
+      <!-- Dropdown menu -->
+      <nav id="menu" role="menu" aria-label="Main menu">
+        <a href="#tokenomics" role="menuitem" tabindex="-1">Tokenomics</a>
+        <a href="#roadmap" role="menuitem" tabindex="-1">Roadmap</a>
+        <a href="#how-to-buy" role="menuitem" tabindex="-1">How to Buy</a>
+        <a href="#buy" role="menuitem" tabindex="-1">Buy $XPAI</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-left">
+        <span class="kicker">Meme coin • Freelance marketplace • Community</span>
+        <h2>Meet <span class="neon">$XPAI</span> — <br/>Freelancing with a twist of memetics.</h2>
+        <p class="lead">Xpert Promotions combines a professional freelancing agency with the energy of a meme-coin. Earn, hire, and grow with our community. Launch-ready design — contract placeholder below.</p>
+
+        <div>
+          <strong>Contract address:</strong>
+          <div id="contract" class="contract">XPA1abcdefghijklmno1234567890pqrstuvwx</div>
+          <button class="copy" id="copyBtn" aria-label="Copy contract address">Copy</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img src="https://cdn.pixabay.com/photo/2017/06/17/11/52/cryptocurrency-2415220_960_720.png" alt="$XPAI coin" style="max-width:100%; border-radius: 18px; box-shadow: 0 0 40px #7b47ffaa;">
+      </div>
+    </section>
+
+    <section id="tokenomics" class="section card" style="max-width:900px;">
+      <h3>Tokenomics</h3>
+      <ul class="tokenomics">
+        <li>🟣 50% Marketing & Community</li>
+        <li>🟡 30% Development & Growth</li>
+        <li>🔵 10% Liquidity Pool</li>
+        <li>🟠 10% Team & Advisors (locked)</li>
+      </ul>
+    </section>
+
+    <!-- Allocation Chart Section -->
+    <section id="allocation" class="section card" style="max-width:900px;">
+      <h3>Allocation Chart</h3>
+      <!-- Placeholder SVG Pie Chart -->
+      <div class="allocation-chart" aria-label="Allocation chart">
+        <svg viewBox="0 0 32 32" width="280" height="280" role="img" aria-describedby="allocationDesc" xmlns="http://www.w3.org/2000/svg" aria-hidden="false" focusable="false">
+          <title id="allocationDesc">Token Allocation Pie Chart</title>
+          <circle r="16" cx="16" cy="16" fill="#ddd" />
+          <path d="M16 0 A16 16 0 0 1 29.76 8.24 L16 16 Z" fill="#a64bf4" />
+          <path d="M29.76 8.24 A16 16 0 0 1 19.6 29.36 L16 16 Z" fill="#f4a64b" />
+          <path d="M19.6 29.36 A16 16 0 0 1 0 16 L16 16 Z" fill="#4ba6f4" />
+          <path d="M0 16 A16 16 0 0 1 16 0 L16 16 Z" fill="#f44b6a" />
+        </svg>
+        <p style="color:#cfe8ffcc; font-size:14px; margin-top:8px;">(Replace this chart with your custom SVG or uploaded image.)</p>
+      </div>
+    </section>
+
+    <section id="roadmap" class="section card" style="margin-top:48px; max-width:900px;">
+      <h2>Roadmap</h2>
+      <ul>
+        <li><strong>Q3 2025:</strong> Launch $XPAI token and initial liquidity pool</li>
+        <li><strong>Q4 2025:</strong> Integrate freelancing platform payments with $XPAI</li>
+        <li><strong>Q1 2026:</strong> Launch marketing campaigns and community events</li>
+        <li><strong>Q2 2026:</strong> Expand platform partnerships and exchange listings</li>
+      </ul>
+    </section>
+
+    <section id="how-to-buy" class="section card" style="max-width:900px;">
+      <h2>How to Buy</h2>
+      <p>Follow these simple steps to buy your $XPAI tokens:</p>
+      <ol>
+        <li>Create a Solana-compatible wallet (e.g., Phantom, Solflare).</li>
+        <li>Deposit SOL into your wallet from an exchange.</li>
+        <li>Visit our partnered decentralized exchanges to swap SOL for $XPAI.</li>
+        <li>Enjoy holding and using your $XPAI tokens!</li>
+      </ol>
+    </section>
+
+    <section id="buy" class="section card" style="max-width:900px;">
+      <h2>Buy $XPAI</h2>
+      <p>Purchase your $XPAI tokens on Solana ecosystem exchanges or DEXs coming soon.</p>
+      <button class="btn btn-primary" id="buyBtn2">Buy Now</button>
+    </section>
+  </main>
+
+  <footer>
+    <div>© 2025 Xpert Promotions. All rights reserved.</div>
+    <div class="socials" aria-label="Social media links">
+      <a href="https://t.me/XPAI_official" target="_blank" rel="noopener" aria-label="Telegram">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#dbeeff" width="24" height="24">
+          <path d="M12 0C5.373 0 0 5.372 0 12c0 6.627 5.373 12 12 12s12-5.373 12-12c0-6.628-5.373-12-12-12zm5.006 7.743l-1.736 8.17c-.132.608-.479.76-.97.472l-2.686-1.982-1.295 1.246c-.143.143-.263.263-.539.263l.194-2.744 4.994-4.51c.217-.194-.047-.303-.335-.11l-6.174 3.883-2.66-.83c-.576-.176-.586-.576.12-.85l10.4-4.012c.479-.176.9.11.747.82z"/>
+        </svg>
+      </a>
+      <a href="https://x.com/AlexGkrist?t=_Gli5StSZtQ8DAsqs3sgeA&s=09" target="_blank" rel="noopener" aria-label="X (Twitter)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#dbeeff" width="24" height="24">
+          <path d="M23.954 4.569c-.885.389-1.83.654-2.825.775a4.932 4.932 0 0 0 2.163-2.724c-.951.564-2.005.974-3.127 1.195a4.918 4.918 0 0 0-8.379 4.482A13.947 13.947 0 0 1 1.671 3.149 4.822 4.822 0 0 0 .964 5.2a4.908 4.908 0 0 0 2.188 4.091 4.903 4.903 0 0 1-2.228-.616v.062a4.917 4.917 0 0 0 3.946 4.814 4.996 4.996 0 0 1-1.293.172c-.315 0-.615-.03-.91-.086a4.924 4.924 0 0 0 4.6 3.42 9.868 9.868 0 0 1-6.102 2.102c-.396 0-.787-.023-1.17-.068a13.945 13.945 0 0 0 7.548 2.213c9.054 0 14-7.5 14-14 0-.213-.004-.425-.015-.636a9.936 9.936 0 0 0 2.457-2.545l-.001-.001z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const menu = document.getElementById('menu');
+    let menuOpen = false;
+
+    hamburger.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      menu.style.display = menuOpen ? 'flex' : 'none';
+      hamburger.setAttribute('aria-expanded', menuOpen);
+    });
+
+    // Close menu on clicking a menu link and jump immediately
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menu.style.display = 'none';
+        menuOpen = false;
+        hamburger.setAttribute('aria-expanded', false);
+      });
+    });
+
+    // Copy contract address
+    const copyBtn = document.getElementById('copyBtn');
+    copyBtn.addEventListener('click', () => {
+      const contractText = document.getElementById('contract').textContent;
+      navigator.clipboard.writeText(contractText).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+      });
+    });
+
+    // Buy buttons alert (placeholder action)
+    document.getElementById('buyBtn2').addEventListener('click', () => {
+      alert('Redirecting to buy page...');
+      // window.location.href = 'https://exchange.example.com/buy-xpai';
+    });
+  </script>
+</body>
+</html>
